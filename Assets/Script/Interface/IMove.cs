@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IMove :IEventWithParam
 {
-    public void Move(float deltaMove);
+    public void Move(Vector2 deltaMove);
 }

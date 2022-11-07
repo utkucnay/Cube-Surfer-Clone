@@ -6,14 +6,14 @@ using UnityEngine.Events;
 public class InputHandler : MonoBehaviour
 {
 
-    float _oldXPos;
+    Vector2 _oldPos;
 
-    UnityEvent<float> e_move;
+    UnityEvent<Vector2> e_move;
 
     private void Awake()
     {
-        e_move = new UnityEvent<float>();
-        Observer.RegisterEventFromTransform<IMove, float>(transform, "Move", e_move);
+        e_move = new UnityEvent<Vector2>();
+        Observer.RegisterEventFromTransform<IMove, Vector2>(transform, "Move", e_move);
     }
 
     private void Update()
@@ -27,12 +27,12 @@ public class InputHandler : MonoBehaviour
             var touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                _oldXPos = touch.position.x; 
+                _oldPos = touch.position; 
             }
             else if (touch.phase == TouchPhase.Moved)
             {
-                var deltaMove = touch.position.x - _oldXPos;
-                _oldXPos = touch.position.x;
+                var deltaMove = touch.position - _oldPos;
+                _oldPos = touch.position;
                 e_move.Invoke(deltaMove);
             }
         }
