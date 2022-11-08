@@ -8,12 +8,12 @@ public class CameraFollow : MonoBehaviour
 
     private void Awake()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
+
     }
 
     private void LateUpdate()
     {
-        float playerZ = _player.transform.position.z;
-        transform.position = playerZ * Vector3.forward;
+        float playerZ = Mathf.Lerp(transform.position.z, _player.transform.position.z - 6, 1f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, playerZ);
     }
 }

@@ -33,9 +33,7 @@ public class InputHandler : MonoBehaviour
             {
                 var deltaMove = touch.position - _oldPos;
                 _oldPos = touch.position;
-                var time = Time.realtimeSinceStartup;
                 e_move.Invoke(deltaMove);
-                Debug.Log((Time.realtimeSinceStartup - time) * 1000000);
             }
         }
            
