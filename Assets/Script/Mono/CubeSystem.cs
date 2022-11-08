@@ -8,15 +8,12 @@ public class CubeSystem : Singleton<CubeSystem> , ICollectObject
 {
     List<GameObject> _cubes;
     List<GameObject> _tempObjects;
-    float _baseLenght;
 
-    [HideInInspector] public UnityEvent<ObjectType> e_collectCube;
+    float _baseLenght;
 
     public override void Awake()
     {
         base.Awake();
-        e_collectCube = new UnityEvent<ObjectType>();
-        e_collectCube.AddListener(CollectCube);
         _cubes = new List<GameObject>();
         _tempObjects = new List<GameObject>();
     }
@@ -40,10 +37,29 @@ public class CubeSystem : Singleton<CubeSystem> , ICollectObject
 
     public void CollectCube(ObjectType objectType)
     {
-        var go = ObjectPool.s_Instance.GetObject(objectType);
-        go.SetActive(true);
-        _cubes.Add(go);
+        var go = CreateCube(objectType);
+        OrderCube(go);
+    }
 
+    public void ObstacleEnter(int index)
+    {
+        CloseGravity();
+        LoseCube(index);
+    }
+
+    public void ObstacleExit()
+    {
+        OpenGravity();
+        _tempObjects.ForEach(go =>
+        {
+            _cubes.Remove(go);
+            ObjectPool.s_Instance.SetObject(ObjectType.DynamicCube, go);
+        });
+        _tempObjects.Clear();
+    }
+
+    void OrderCube(GameObject go)
+    {
         int index = 1;
         float lenght = _baseLenght + _cubes.Count * go.transform.localScale.y;
 
@@ -63,22 +79,12 @@ public class CubeSystem : Singleton<CubeSystem> , ICollectObject
         });
     }
 
-
-    public void ObstacleEnter(int index)
+    GameObject CreateCube(ObjectType objectType)
     {
-        CloseGravity();
-        LoseCube(index);
-    }
-
-    public void ObstacleExit()
-    {
-        OpenGravity();
-        _tempObjects.ForEach(go =>
-        {
-            _cubes.Remove(go);
-            ObjectPool.s_Instance.SetObject(ObjectType.DynamicCube, go);
-        });
-        _tempObjects.Clear();
+        var go = ObjectPool.s_Instance.GetObject(objectType);
+        go.SetActive(true);
+        _cubes.Add(go);
+        return go;
     }
 
     void CloseGravity()
