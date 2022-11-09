@@ -105,6 +105,7 @@ public class CubeSystem : Singleton<CubeSystem> , ICollectObject
     void LoseCube(int index)
     {
         var obj = _cubes[_cubes.Count - index];
+        if (_tempObjects.Contains(obj)) return;
         _tempObjects.Add(obj);
     }
 }
